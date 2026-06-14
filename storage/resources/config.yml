@@ -1,0 +1,50 @@
+# Discord Bot Configuration
+
+# Server Settings
+server:
+  id: "1434558422157627445" # Your Discord Server ID
+
+developer:
+  user_id:
+    - "282363030501720076"
+    - "895291556905508955"
+
+# Welcome Message Settings
+channel:
+  welcome:
+    enabled: true
+    channel_id: "1450752935276314656" # Channel ID for welcome messages (leave empty to use system channel)
+    # Embed Customization
+    title_template: "⊹ Welcome to {guild} ⊹"
+    color: "#A8F9D6"
+    invite_link: "Qubiverse.com"
+    description_lines:
+      - "Come and visit some channels:"
+      - "➜ Come and say hi to everyone! <#1451626998953807992>"
+      - "➜ Don't forget to read our community rules! <#1450742953709666385>"
+      - "➜ Check about our community here! <#1450756255424581642>"
+
+flyer:
+  rules: |
+    __****Community Guidelines****__
+    ```markdown
+    1. Respect all members. Harassment, discrimination, hate speech, or offensive behavior is prohibited.
+    2. No spam, flooding, excessive emojis, or unsolicited DMs.
+    3. Keep content appropriate. NSFW, explicit, or adult material is not allowed.
+    4. No bullying, personal attacks, or targeted harassment.
+    5. Respect privacy. Do not share personal or confidential information without permission.
+    6. Follow Discord's Community Guidelines and Terms of Service.
+    7. Advertising or self-promotion requires moderator approval unless allowed in designated channels.
+    8. Use appropriate language and maintain a welcoming environment.
+    9. Stay on topic and use channels for their intended purpose.
+    ```
+    __****Penalty System****__
+    ```markdown
+    1 Violation = Written Warning
+    3 Violations = 3-Day Mute
+    Kick/Ban = Moderator Discretion
+    ```
+    __****Enforcement Policy****__
+    ```markdown
+    Members who continue to break the rules after receiving three warnings will be muted for 3 days. Repeated violations after a mute may result in a kick or permanent ban from the Qubiverse Discord server.
+    ```
