@@ -8,6 +8,19 @@ import { getWelcomeConfig } from '../utils/Config.utils';
 GlobalFonts.registerFromPath(resolve(process.cwd(), 'storage/resources/fonts/Poppins-SemiBold.ttf'), 'Poppins');
 
 export class WelcomeService {
+	private static cachedBackground: any = null;
+
+	/**
+	 * Loads and caches the welcome banner background image in memory.
+	 */
+	private static async getBackgroundImage() {
+		if (!this.cachedBackground) {
+			const backgroundPath = resolve(process.cwd(), 'storage/resources/Welcom-Banner.png');
+			this.cachedBackground = await loadImage(backgroundPath);
+		}
+		return this.cachedBackground;
+	}
+
 	/**
 	 * Formats a welcome message for a user.
 	 * 
@@ -36,13 +49,20 @@ export class WelcomeService {
 	) {
 		const welcomeConfig = getWelcomeConfig();
 
-		// Generate the welcome banner PNG buffer
+		// Generate the welcome banner JPEG buffer
 		const bannerBuffer = await this.generateWelcomeBanner(avatarUrl, username);
-		const bannerAttachment = new AttachmentBuilder(bannerBuffer, { name: 'welcome-banner.png' });
+		const bannerAttachment = new AttachmentBuilder(bannerBuffer, { name: 'welcome-banner.jpg' });
 
-		// Load the animated logo GIF
-		const logoPath = resolve(process.cwd(), 'storage/resources/LogoAnimation.gif');
-		const logoAttachment = new AttachmentBuilder(logoPath, { name: 'LogoAnimation.gif' });
+		// Check if a hosted CDN URL is provided for the logo to avoid sending 1.5MB on each join
+		let logoAttachment: AttachmentBuilder | null = null;
+		let thumbnailTarget = 'attachment://LogoAnimation.gif';
+
+		if (welcomeConfig.logo_url) {
+			thumbnailTarget = welcomeConfig.logo_url;
+		} else {
+			const logoPath = resolve(process.cwd(), 'storage/resources/LogoAnimation.gif');
+			logoAttachment = new AttachmentBuilder(logoPath, { name: 'LogoAnimation.gif' });
+		}
 
 		// Prepare description lines
 		const defaultDescriptionLines = [
@@ -65,16 +85,21 @@ export class WelcomeService {
 			.setColor('#6646E3') // Bea
 			.setTitle(title)
 			.setDescription(description)
-			.setThumbnail('attachment://LogoAnimation.gif')
-			.setImage('attachment://welcome-banner.png')
+			.setThumbnail(thumbnailTarget)
+			.setImage('attachment://welcome-banner.jpg')
 			.setColor(embedColor)
 			.setFooter({ text: welcomeConfig.invite_link || '.gg/qubiverse' })
 			.setTimestamp();
 
+		const files: AttachmentBuilder[] = [bannerAttachment];
+		if (logoAttachment) {
+			files.push(logoAttachment);
+		}
+
 		return {
 			content: `hello! <@${userId}>`,
 			embeds: [embed],
-			files: [bannerAttachment, logoAttachment]
+			files
 		};
 	}
 
@@ -83,11 +108,10 @@ export class WelcomeService {
 	 * 
 	 * @param avatarUrl - The Discord avatar URL of the user.
 	 * @param username - The username of the user.
-	 * @returns A promise resolving to a PNG image buffer of the welcome banner.
+	 * @returns A promise resolving to a JPEG image buffer of the welcome banner.
 	 */
 	public static async generateWelcomeBanner(avatarUrl: string, username: string): Promise<Buffer> {
-		const backgroundPath = resolve(process.cwd(), 'storage/resources/Welcom-Banner.png');
-		const background = await loadImage(backgroundPath);
+		const background = await this.getBackgroundImage();
 
 		const canvas = createCanvas(background.width, background.height);
 		const ctx = canvas.getContext('2d');
@@ -141,6 +165,6 @@ export class WelcomeService {
 		ctx.shadowOffsetX = 0;
 		ctx.shadowOffsetY = 0;
 
-		return canvas.toBuffer('image/png');
+		return canvas.toBuffer('image/jpeg');
 	}
 }

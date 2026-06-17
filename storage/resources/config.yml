@@ -18,6 +18,9 @@ channel:
     title_template: "⊹ Welcome to {guild} ⊹"
     color: "#A8F9D6"
     invite_link: "Qubiverse.com"
+    # Optional: Direct hosted URL for the animated logo. If set, this avoids uploading the 1.5MB local GIF on every welcome message, significantly speeding up the response time.
+    # logo_url: "https://media.discordapp.net/attachments/..."
+    logo_url: "https://cdn.discordapp.com/attachments/1450742953709666388/1516756422459789363/Qubiverse.gif?ex=6a33ccff&is=6a327b7f&hm=6844230139e6dd341f8b8c2e66e43ca59f66ce5c98c23a179eb1efab3d6ea88c&"
     description_lines:
       - "Come and visit some channels:"
       - "➜ Come and say hi to everyone! <#1451626998953807992>"

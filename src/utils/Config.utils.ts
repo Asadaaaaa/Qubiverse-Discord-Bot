@@ -15,6 +15,7 @@ interface Config {
 			title_template?: string;
 			color?: string;
 			invite_link?: string;
+			logo_url?: string;
 			description_lines?: string[];
 		};
 	};
